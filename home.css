@@ -1,0 +1,88 @@
+/* .box{}   font-family:Verdana, Geneva, Tahoma, sans-serif;
+    color:grey;
+    border-style:double;
+    border-width: 2px;
+    height: 400px;
+    border-radius: 5px;
+    border-color: black;
+    background-color: rgb(31, 30, 30);
+    margin-top:1000px;
+   
+    border-radius:20px;
+
+}
+#line{
+    width:450px;
+    border:0px;
+    border-bottom: 2px solid rgb(118, 115, 115);
+    outline: none;
+    padding: 10px;
+}
+#driver{
+    width:420px;
+    height:5px;
+    border-style:double;
+    background-color:chartreuse ;
+    border-color:chartreuse;
+    border-radius:20px;
+    border-width:40px;
+    font-size:25px;
+    text-align:center;
+    color:black;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    margin-right:10px;
+    margin-top:240px;
+}
+.body
+{
+    margin-left: 500px;
+    margin-right: 450px;
+}
+#bottom
+{
+    height:10px;
+    margin-top:5px;
+}
+*/
+.body{
+    border-style:double;
+    border-radius:20px;
+    border-width:40px;
+    height:310px;
+    border-color:rgb(28, 27, 27);
+    background-color:rgb(28, 27, 27);
+    margin-left:500px;
+    margin-right:500px;
+    margin-top:370px;
+    z-index: 1px;
+}
+.text{
+    font-size: 15px;
+    color:white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#line{
+    height:1px;
+    width:400px;
+    background-color:rgb(28, 27, 27) ;
+    border:0px;
+    border-bottom: 2px solid rgb(118, 115, 115);
+    outline: none;
+    padding:1px;
+
+}
+.driver
+{
+    border-style: double;
+    border-color:chartreuse;
+    background-color:chartreuse;
+    font-size:20px;
+    border-radius:20px;
+    margin-top:15px;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.car{
+width:1px;
+height: 100px;
+}

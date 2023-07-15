@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="iconic .css">
+</head>
+<body>
+<div>
+    <div class="title">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <div class="customised">Iconic Spot</div>
+
+    <div class="green"></div>
+    <div class="white">
+    </div>
+</div>
+<div id="map"></div>
+
+
+
+
+<script>
+function initMap() {
+var map = new google.maps.Map(document.getElementById('map'), {
+  center: { lat: 11.9139, lng: 79.8145 }, // Set the initial map center coordinates
+  zoom: 12 // Set the initial zoom level
+});
+}
+</script>
+<script>
+      
+function initMap() {
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 13,
+  center: { lat: 11.9139, lng: 79.8145 } // Center the map on Pondicherry
+});
+// Create a custom icon for the markers
+var customIcon = {
+url: 'spot.svg', // Path to the custom marker icon image
+scaledSize: new google.maps.Size(20, 20), // Size of the marker icon
+origin: new google.maps.Point(0, 0), // Origin point of the icon (top-left corner)
+anchor: new google.maps.Point(20, 40) // Anchor point of the icon (center-bottom)
+};
+// Add a marker for Sri Aurobindo Ashram
+var sriAurobindoAshramMarker = new google.maps.Marker({
+  position: { lat: 11.9359, lng: 79.8379 }, // Coordinates of Sri Aurobindo Ashram
+  map: map,
+  title: 'Sri Aurobindo Ashram',
+  icon:customIcon
+});
+
+
+
+
+
+// Add a marker for Promenade Beach
+var promenadeBeachMarker = new google.maps.Marker({
+  position: { lat: 11.9310, lng: 79.8301 }, // Coordinates of Promenade Beach
+  map: map,
+  title: 'Promenade Beach',
+  icon:customIcon
+});
+
+// Add a marker for Auroville
+var aurovilleMarker = new google.maps.Marker({
+  position: { lat: 12.0055, lng: 79.8107 }, // Coordinates of Auroville
+  map: map,
+  title: 'Auroville',
+  icon:customIcon
+});
+// Add a marker for Botanical Garden
+var botanicalGardenMarker = new google.maps.Marker({
+position: { lat: 11.9262, lng: 79.8271 }, // Coordinates of Botanical Garden
+map: map,
+title: 'Botanical Garden',
+icon:customIcon
+});
+
+// Add a marker for Serenity Beach
+var serenityBeachMarker = new google.maps.Marker({
+position: { lat: 11.8997, lng: 79.8290 }, // Coordinates of Serenity Beach
+map: map,
+title: 'Serenity Beach',
+icon:customIcon
+});
+
+// Add a marker for Puducherry Museum
+var museumMarker = new google.maps.Marker({
+position: { lat: 11.9325, lng: 79.8312 }, // Coordinates of Puducherry Museum
+map: map,
+title: 'Puducherry Museum',
+icon:customIcon
+});
+// Add a marker for Rock Beach
+var rockBeachMarker = new google.maps.Marker({
+position: { lat: 11.9384, lng: 79.8298 }, // Coordinates of Rock Beach
+map: map,
+title: 'Rock Beach',
+icon:customIcon
+});
+
+// Add a marker for Paradise Beach
+var paradiseBeachMarker = new google.maps.Marker({
+position: { lat: 11.8547, lng: 79.8182 }, // Coordinates of Paradise Beach
+map: map,
+title: 'Paradise Beach',
+icon:customIcon
+});
+
+// Add a marker for Aurobindo Ashram Dining Hall
+var diningHallMarker = new google.maps.Marker({
+position: { lat: 11.9373, lng: 79.8344 }, // Coordinates of Aurobindo Ashram Dining Hall
+map: map,
+title: 'Aurobindo Ashram Dining Hall',
+icon:customIcon
+});
+
+
+// Add a marker for French War Memorial
+var warMemorialMarker = new google.maps.Marker({
+position: { lat: 11.9370, lng: 79.8309 }, // Coordinates of French War Memorial
+map: map,
+title: 'French War Memorial',
+icon:customIcon
+});
+
+}
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqs5uPsagkNSZRj0iFrOvCdj-tiLJcf88&callback=initMap">
+</script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

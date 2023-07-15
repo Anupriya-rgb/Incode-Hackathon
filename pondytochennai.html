@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="new1.css">
+    <style>
+        .p {
+            color: black;
+            font-size: 30px;
+            margin-left: 600px;
+        }
+
+        .popbox {
+            color: white;
+            z-index: 3;
+            position: absolute;
+            top: 100px;
+            left: 51.6%;
+            transform: translateX(-50%);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        body {
+            margin-left: 260px;
+            margin-right: 300px;
+        }
+
+        #map {
+            height: 700px;
+            width: 26%;
+            overflow: auto;
+            margin-left: 740px;
+            margin-top: 90px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            border-radius: 30px;
+        }
+
+        .innerbox {
+            position: relative;
+            z-index: 3;
+            font-size: 20px;
+            text-align: center;
+            width: 350px;
+            height: 30px;
+            border-radius: 20px;
+            background-color: white;
+            margin-top: 10px;
+            margin-left: 50px;
+            border-color: white;
+        }
+
+        .dirbtn {
+            margin-left: 40%;
+            margin-top: 20px;
+        }
+
+        .drivbtn {
+            background-color: #a7e92f;
+            border-radius: 7px;
+            width: 300px;
+            height: 50px;
+            margin-top: 40px;
+          margin-left: 80px;
+            font-size: 20px;
+        }
+
+        .popbox1 {
+            color: black;
+            z-index: 3;
+            position: absolute;
+            top: 500px;
+            left: 51.6%;
+            transform: translateX(-50%);
+
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 450px;
+            height: 300px;
+            font-size: 20px;
+        }
+
+        .popbox1 div {
+
+            flex-direction: column;
+        }
+
+        .popbox1 div span {
+            margin-top: 5px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            font-size: 20px;
+            background-color: #a7e92f;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="title">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+        <p class="p">Pondicherry to Chennai</p>
+
+
+        <div class="white">
+        </div>
+    </div>
+    <div id="map"></div>
+    <div class="popbox1">
+        <div>
+            <div style="background-color: #a7e92f;border-radius: 15px;width:450px;height: auto;margin-top: 0px;">
+                <strong> <ion-icon name="stop-circle" style="margin-left: 20px;margin-top: 10px;"></ion-icon> </ion-icon>
+                </strong> <span id="getsource">Pondicherry</span><br>
+                <strong> <ion-icon name="location" style="margin-left: 20px;margin-top: 10px;"></ion-icon>
+                </strong> <span id="getdestination">Chennai</span>
+            </div>
+            <div>
+                <strong>Estimated Time:</strong> <span id="estimatedTime"></span>
+                <strong>Total Distance:</strong> <span id="totalDistance"></span>
+            </div>
+            <div>
+                <strong>Fare Estimate:</strong> <span id="fareEstimate"></span>
+            </div>
+            <div>
+                <button class="drivbtn">Find driver</button>
+            </div>
+        </div>
+    </div>
+   
+    <script>
+        function initMap() {
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: { lat: 12.9716, lng: 79.1593 }, // Center the map on Chennai
+                mapTypeControl: false,
+                fullscreenControl: false
+            });
+
+            directionsRenderer.setMap(map);
+
+            var source = "Pondicherry";
+            var destination = "Chennai";
+
+            calculateAndDisplayRoute(directionsService, directionsRenderer, source, destination);
+
+            // Display entered source and destination
+            document.getElementById('getsource').innerHTML = source;
+            document.getElementById('getdestination').innerHTML = destination;
+
+            // Show back button
+            document.getElementById('backButton').style.display = 'block';
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsRenderer, source, destination) {
+            directionsService.route(
+                {
+                    origin: source,
+                    destination: destination,
+                    travelMode: google.maps.TravelMode.DRIVING
+                },
+                function (response, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(response);
+
+                        // Calculate and display estimated time, total distance, and fare estimate
+                        var route = response.routes[0];
+                        var legs = route.legs[0];
+                        var estimatedTime = legs.duration.text;
+                        var totalDistance = legs.distance.text;
+                        var fareEstimate = calculateFareEstimate(legs.distance.value);
+
+                        document.getElementById('estimatedTime').innerHTML = "<br>" + estimatedTime;
+                        document.getElementById('totalDistance').innerHTML = "<br>" + totalDistance;
+                        document.getElementById('fareEstimate').innerHTML = "<br>" + fareEstimate;
+                    } else {
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                }
+            );
+        }
+
+        function calculateFareEstimate(distance) {
+            var baseFare = 5; // Base fare in currency
+            var distanceRate = 0.1; // Rate per meter
+
+            var fare = baseFare + (distanceRate * distance);
+            return fare.toFixed(2);
+        }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqs5uPsagkNSZRj0iFrOvCdj-tiLJcf88&callback=initMap">
+    </script>
+
+<script src="script.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

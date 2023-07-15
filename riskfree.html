@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="new1.css">
+    <style>
+        .p {
+            color: black;
+            font-size: 30px;
+            margin-left: 600px;
+        }
+
+        .popbox {
+            color: white;
+            z-index: 3;
+            position: absolute;
+            top: 100px;
+            left: 51.6%;
+            transform: translateX(-50%);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        body {
+            margin-left: 260px;
+            margin-right: 300px;
+        }
+
+        #map {
+            height: 700px;
+            width: 26%;
+            overflow: auto;
+            margin-left: 740px;
+            margin-top: 90px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            border-radius: 30px;
+        }
+
+        .innerbox {
+            position: relative;
+            z-index: 3;
+            font-size: 20px;
+            text-align: center;
+            width: 350px;
+            height: 30px;
+            border-radius: 20px;
+            background-color: white;
+            margin-top: 10px;
+            margin-left: 50px;
+            border-color: white;
+        }
+
+        .dirbtn {
+            margin-left: 40%;
+            margin-top: 20px;
+        }
+
+        .drivbtn {
+            background-color: #a7e92f;
+            border-radius: 7px;
+            width: 300px;
+            height: 50px;
+            margin-top: 40px;
+          margin-left: 80px;
+            font-size: 20px;
+        }
+
+        .popbox1 {
+            color: black;
+            z-index: 3;
+            position: absolute;
+            top: 500px;
+            left: 51.6%;
+            transform: translateX(-50%);
+
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 450px;
+            height: 300px;
+            font-size: 20px;
+        }
+
+        .popbox1 div {
+
+            flex-direction: column;
+        }
+
+        .popbox1 div span {
+            margin-top: 5px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            font-size: 20px;
+            background-color: #a7e92f;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="title">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+        <p class="p">Risk Free Route</p>
+
+
+        <div class="white">
+        </div>
+    </div>
+    <div class="popbox">
+        <div>
+            <input class="innerbox" type="text" id="source" placeholder="Enter source location">
+        </div>
+        <div>
+            <input class="innerbox" type="text" id="destination" placeholder="Enter destination location">
+        </div>
+        <div>
+            <button class="innerbox" id="getDirections" type="button">Get Directions</button>
+        </div>
+    </div>
+    <div id="map"></div>
+    <div class="popbox1">
+        <div>
+            <div style="background-color: #a7e92f;border-radius: 15px;width:450px;height: auto;margin-top: 0px;">
+                <strong> <ion-icon name="stop-circle"  style="margin-left: 20px;margin-top: 10px;"></ion-icon> </ion-icon></strong> <span id="getsource"></span><br>
+                <strong> <ion-icon name="location" style="margin-left: 20px;margin-top: 10px;"></ion-icon></strong> <span id="getdestination"></span>
+
+
+            </div>
+            <div>
+                <strong>Estimated Time:</strong> <span id="estimatedTime"></span> <br>
+                <hr>
+                <strong style="margin-bottom: 40px;">Total Distance:</strong> <span id="totalDistance" ></span>
+                <hr>
+           </div>
+            <div>
+                <strong>Fare Estimate:</strong> <span id="fareEstimate"></span>
+                <hr>
+            </div>
+            <div>
+                <button class="drivbtn">Find driver</button>
+            </div>
+        </div>
+       
+    </div>
+    <div id="backButton" class="back-button" style="display: none; margin-left: 750px; margin-top: 90px;">
+        <ion-icon name="arrow-back-outline"></ion-icon> 
+    </div>
+    <script>
+        function initMap() {
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: { lat: 11.9139, lng: 79.8145 }, // Center the map on Pondicherry
+                mapTypeControl: false,
+                fullscreenControl: false
+            });
+
+            directionsRenderer.setMap(map);
+
+            // Define the custom marker icon
+            var redIcon = {
+                url: 'red1.png',
+                scaledSize: new google.maps.Size(40, 40),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(20, 40)
+            };
+
+            // CSV data
+            var csvData = `latitude,longitude,location,features,crime
+11.91042,79.75872,Villianur,51,theft
+11.93038,79.79685,reddiyarpalayam,16,theft
+11.89239,79.75357,ozhukarai,7,theft
+11.96285,79.82747,krishna nagar,5,burglary
+11.9647,79.82459,karuvadikuppam,10,burglary
+11.90208,79.7408,uravaiyur,3,burglary
+11.95338,79.8126,lawspet,17,burglary
+11.81109,79.74254,bahour,1,burglary
+11.9138,79.82995,mudaliyarpet,4,burglary
+11.9819,79.79726,Airport,3,burglary
+11.861865,79.79321,thavalakuppam,2,theft
+11.931589,79.807692,Indira Gandhi statue,1,suspicious crime
+11.934448,79.807753,Surguru restaurant,30,suspicious crime
+11.945077,79.804008,Thttanchavady,40,suspicious crime
+11.953187,79.796772,Jipmer,23,suspicious crime
+11.947686,79.807911,Idhaya,45,suspicious crime
+11.936401,79.81928,Gem hospital,67,suspicious crime
+11.942261,79.807941,Murugaa theatre,12,suspicious crime
+11.939529,79.810304,Aditya vidhyasharam,1,suspicious crime
+11.922092,79.810878,Mudhaliarpet,23,suspicious crime
+11.925303,79.781103,Arumathapuram,45,suspicious crime
+11.956776,79.81224,Avvai nagar,89,suspicious crime
+11.95566,79.829123,Bharathi nagar,3,suspicious crime
+11951871,79.810905,Rajajai nagar,4,suspicious crime
+11.961062,79.819355,Nesavalar nagar,6,suspicious crime
+11.953746,79.82088,Krishna nagar,1,theft
+11.952486,79.794857,Gorimedu,0,theft
+11.961466,79.807272,Navarkulam,7,theft
+11.963906,79.82559,Karuvadikuppam,4,theft
+11.966247,79.838254,Old Madras Street,43,theft
+11.971738,79.835145,Kottakupam,23,theft
+11.946776,79.836105,Kariappa house,34,rape
+11.956591,79.786878,Mettupalayam rto,54,theft
+11.956569,79.803523,Narmadha nagar,1,suspicious crime
+11.931048,79.83013,Auro hotels,0,theft
+11.948887,79.788805,Vpsingh nagar,56,theft
+11.945807,79.790936,Shanmugapuram,17,theft
+11.944627,79.79027,jeeva street,18,theft
+11.945593,79.793045,anna street,19,theft
+11.945725,79.795827,elango st,20,theft
+11.93432,79.792776,voc street,23,theft
+11.94447,79.795241,rathinam street,43,theft
+11.931976,79.8292922,petit canal st,24,theft
+11.93038,79.830267,mission st,78,theft
+11.928636,79.83121,cazy st,3,theft
+11.99862,79.838643,Narikurava colony,2,theft
+11.040446,11.179442,Singaravelan nagar,1,burglary
+11.977036,79.842419,Rani residency,63,theft
+11.964299,79.800038,Guru residence,9,burglary
+11.97391775,79.84005035,kamaraj street,2,burglary
+11.97283033,79.83763254,mariamman koil,3,burglary
+11.9629491,79.83962029,big st,6,burglary
+11.97375776,79.83942366,periyar st,7,burglary
+11.98574779,79.84247594,kuliapalyam,8,burglary
+11.9919832,79.84930535,pillayar kovil,9,burglary
+11.98718591,79.84875572,mudailyarchavadi,1,burglary
+11.99593597,79.85036272,madm,0,burglary
+12.00832259,79.8562505,thedurom street,23,burglary
+11.95571367,79.82909966,bharathi nagar,12,burglary
+11.96125024,79.81890219,nessevalar,56,burglary
+11.96562398,79.83379433,abisheik nagar,23,burglary
+11.98127351,79.83379,iyyanagar,32,burglary
+11.98994978,79.84671011,yoga allicanes,12,burglary
+11.96753475,79.84672,fawarz street,16,burglary
+11.97877604,79.84123055,chinamudaliar,6,burglary
+11.97562469,79.84102446,theeparchan,3,burglary
+11.95779004,79.83894884,sodhanaikuppam,9,burglary
+11.9680817,79.83896,maison marie,1,burglary
+12.03874458,79.85027565,jailwail,6,burglary
+12.3912873,80.04893392,kodur,3,burglary
+12.01128603,79.79126061,irumbai,3,burglary`;
+
+            var csvRows = csvData.split("\n");
+
+            // Iterate through each row of the CSV data
+            for (var i = 1; i < csvRows.length; i++) {
+                var row = csvRows[i].split(",");
+                var latitude = parseFloat(row[0]);
+                var longitude = parseFloat(row[1]);
+                var location = row[2];
+
+                // Add a marker for each latitude and longitude using the red icon
+                var marker = new google.maps.Marker({
+                    position: { lat: latitude, lng: longitude },
+                    map: map,
+                    title: location,
+                    icon: redIcon
+                });
+            }
+
+            // Add event listener for the "Get Directions" button
+            document.getElementById('getDirections').addEventListener('click', function () {
+                var source = document.getElementById('source').value;
+                var destination = document.getElementById('destination').value;
+
+                calculateAndDisplayRoute(directionsService, directionsRenderer, source, destination);
+
+                // Hide popbox and display back button
+                document.querySelector('.popbox').style.display = 'none';
+                document.getElementById('backButton').style.display = 'block';
+
+                // Display entered source and destination
+                document.getElementById('getsource').innerHTML = "" + source;
+                document.getElementById('getdestination').innerHTML = "" + destination;
+            });
+
+            // Add event listener for the back button
+            document.getElementById('backButton').addEventListener('click', function () {
+                // Show popbox and hide back button
+                document.querySelector('.popbox').style.display = 'block';
+                document.getElementById('backButton').style.display = 'none';
+
+                // Clear the source and destination inputs
+                document.getElementById('source').value = '';
+                document.getElementById('destination').value = '';
+
+                // Clear the directions and information on the map
+                directionsRenderer.setDirections({ routes: [] });
+                document.getElementById('getsource').innerHTML = '';
+                document.getElementById('getdestination').innerHTML = '';
+                document.getElementById('estimatedTime').textContent = '';
+                document.getElementById('totalDistance').textContent = '';
+                document.getElementById('fareEstimate').textContent = '';
+            });
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsRenderer, source, destination) {
+            directionsService.route(
+                {
+                    origin: source,
+                    destination: destination,
+                    travelMode: google.maps.TravelMode.DRIVING
+                },
+                function (response, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(response);
+
+                        // Calculate and display estimated time, total distance, and fare estimate
+                        var route = response.routes[0];
+                        var legs = route.legs[0];
+                        var estimatedTime = legs.duration.text;
+                        var totalDistance = legs.distance.text;
+                        var fareEstimate = calculateFareEstimate(legs.distance.value);
+
+                        document.getElementById('estimatedTime').innerHTML = "<br>"+estimatedTime;
+                        document.getElementById('totalDistance').innerHTML ="<br>"+ totalDistance;
+                        document.getElementById('fareEstimate').innerHTML = "<br>"+fareEstimate;
+                    } else {
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                }
+            );
+        }
+
+        function calculateFareEstimate(distance) {
+            var baseFare = 5; // Base fare in currency
+            var distanceRate = 0.1; // Rate per meter
+
+            var fare = baseFare + (distanceRate * distance);
+            return fare.toFixed(2);
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqs5uPsagkNSZRj0iFrOvCdj-tiLJcf88&callback=initMap">
+        </script>
+
+    <script src="script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="sidemenu.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* Prevent body scrolling */
+        }
+
+
+
+        .text {
+            margin-bottom: 20px;
+        }
+
+        .text p {
+            margin-top: 30px;
+        }
+
+        .driver {
+            display: block;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+
+        .image {
+            margin-top: 100px;
+        }
+
+        .sbox input {
+            border-width: 0px;
+            margin-top: 20px;
+            background-color: white;
+            color: grey;
+            height: 40px;
+            font-size: 25px;
+        }
+
+        .sbox input::placeholder {
+            content: '\f2bb';
+            font-family: "Ionicons";
+           
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .car-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .car-container img {
+            width: 160px;
+        }
+
+        .car-container p {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body class="body">
+    <!-- sidemenu -->
+    <div id="mySidenav" class="sidenav">
+        <!--sidemenu close button-->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div>
+            <ul>
+                <nav>
+                    <li style="list-style-type: none; font-size: 24px; display: flex; align-items: center;">
+                        <img src="logo.png" width="70px" style="margin-right: 10px;">
+                        <span>Annie</span>
+                        <ion-icon name="chevron-forward-outline" style="font-size: 35px; margin-left: auto;"></ion-icon>
+                    </li>
+                    <li
+                        style="list-style-type: none; font-size: 14px; margin-left: 85px; color: grey; font-size: 16px; margin-bottom: 20px;">
+                        newbie</li>
+                </nav>
+            </ul>
+        </div>
+        <hr>
+        <ul>
+            <a href="new7.html">
+                <li style="list-style-type: none; font-size: 25px;">&#xf5e4; &nbsp; city</li>
+            </a><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="time-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; Request history</li><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="globe-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; Outstation</li><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="shield-checkmark-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; Safety</li><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="settings-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; Settings</li><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="alert-circle-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; FAQ</li><br><br>
+            <li style="list-style-type: none; font-size: 25px;"><ion-icon name="chatbox-ellipses-outline"
+                    style="font-size: 25px;"></ion-icon> &nbsp; Support</li><br><br>
+        </ul>
+        <hr>
+        <button class="drivbtn">Driver mode</button><br>
+        <a href="#"><img src="iglogo.png" class="ig" width="50px"></a>
+        <a href=""><img src="fblogo.png" class="fb" width="60px" height="59px"></a>
+    </div>
+    <!--sidemenu list button-->
+    <span id="nav-icon" onclick="openNav()"
+        style="background-color:white; color:black; border-radius: 30px; width: 50px; text-align: center;">&#9776;</span>
+    <div class="titlee" style="margin-left: 220px; margin-top: 30px; font-size: 30px;">city to city</div>
+    <div class="image">
+        <img src="car icon.jpeg"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+            src="icon1.jpeg" width="150px">
+    </div>
+    <div class="sbox">
+        <input type="text" placeholder="from"><br><br>
+        <input type="text" placeholder="TO">
+    </div>
+    <div>
+        <br>
+        <br>
+        <div style="display: flex;">
+            <div class="car-container">
+                <img src="CRETA.webp" width="160px">
+                <p>Private ride</p>
+            </div>
+            <div class="car-container">
+                <img src="CRETA.webp" width="150px">
+                <p>Shared ride</p>
+            </div>
+            <div class="car-container">
+                <img src="CRETA.webp" width="150px">
+                <p>Parcel</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="sbox">
+        <label style="font-size: 20px;">When</label><br>
+        <input type="date" placeholder="when"><br><br>
+        <input type="number" placeholder="Number of passengers"><br>
+        <input type="text" placeholder="comments">
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Directions</title>
+  <link rel="stylesheet" href="new1.css">
+  <style>
+    .p {
+      color: black;
+      font-size: 30px;
+      margin-left: 600px;
+    }
+
+    .popbox {
+      color: white;
+      z-index: 3;
+      position: absolute;
+      top: 100px;
+      left: 51.6%;
+      transform: translateX(-50%);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    body {
+      margin-left: 260px;
+      margin-right: 300px;
+    }
+
+    #map {
+      height: 700px;
+      width: 26%;
+      overflow: auto;
+      margin-left: 740px;
+      margin-top: 90px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      border-radius: 30px;
+    }
+
+    .innerbox {
+      position: relative;
+      z-index: 3;
+      font-size: 20px;
+      text-align: center;
+      width: 350px;
+      height: 30px;
+      border-radius: 20px;
+      background-color: white;
+      margin-top: 10px;
+      margin-left: 50px;
+      border-color: white;
+    }
+
+    .dirbtn {
+      margin-left: 40%;
+      margin-top: 20px;
+    }
+
+    .drivbtn {
+      background-color: #a7e92f;
+      border-radius: 7px;
+      width: 300px;
+      height: 50px;
+      margin-top: 210px;
+      margin-left: 0;
+      font-size: 20px;
+
+    }
+
+    .popbox1 {
+      color: black;
+      z-index: 3;
+      position: absolute;
+      top: 500px;
+      left: 51.6%;
+      transform: translateX(-50%);
+      padding: 20px;
+      background-color: white;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      width: 450px;
+      height: 300px;
+      font-size: 20px;
+    }
+
+    .popbox1 div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popbox1 div span {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div class="title">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+    <p class="p">Customize Route</p>
+
+
+    <div class="white">
+    </div>
+  </div>
+  <div class="popbox">
+    <div>
+      <input class="innerbox" type="text" id="source" placeholder="Source location">
+    </div>
+    <div>
+      <input class="innerbox" type="text" id="destination" placeholder="Enter destination location">
+    </div>
+    <div>
+      <input class="innerbox" type="text" id="stop1" placeholder="Enter stop 1 location">
+    </div>
+    <div>
+      <input class="innerbox" type="text" id="stop2" placeholder="Enter stop 2 location">
+    </div>
+    <div>
+      <button class="dirbtn" onclick="getDirections()">Get Directions</button>
+    </div>
+
+  </div>
+  <div id="map"></div>
+  <div class="popbox1">
+    <div>
+      <div>
+        <strong>Estimated Time:</strong> <span id="estimatedTime"></span>
+      </div>
+      <div>
+        <strong>Total Distance:</strong> <span id="totalDistance"></span>
+      </div>
+      <div>
+        <strong>Fare Estimate:</strong> <span id="fareEstimate"></span>
+      </div>
+    </div>
+    <p>
+      <button class="drivbtn">Find driver</button>
+    </p>
+  </div>
+
+  <script>
+    function getDirections() {
+      var source = document.getElementById('source').value;
+      var destination = document.getElementById('destination').value;
+      var stop1 = document.getElementById('stop1').value;
+      var stop2 = document.getElementById('stop2').value;
+
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': source }, function (results, status) {
+        if (status === 'OK') {
+          var sourceLocation = results[0].geometry.location;
+
+          geocoder.geocode({ 'address': destination }, function (results, status) {
+            if (status === 'OK') {
+              var destinationLocation = results[0].geometry.location;
+
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: sourceLocation
+              });
+
+              var directionsService = new google.maps.DirectionsService();
+              var directionsDisplay = new google.maps.DirectionsRenderer();
+              directionsDisplay.setMap(map);
+
+              var request = {
+                origin: sourceLocation,
+                destination: destinationLocation,
+                optimizeWaypoints: true,
+                travelMode: google.maps.TravelMode.DRIVING
+              };
+
+              // Include waypoints if they are provided
+              if (stop1) {
+                request.waypoints = [
+                  { location: stop1, stopover: true },
+                ];
+              }
+
+              if (stop2) {
+                if (!request.waypoints) {
+                  request.waypoints = [];
+                }
+                request.waypoints.push({ location: stop2, stopover: true });
+              }
+
+              directionsService.route(request, function (response, status) {
+                if (status === 'OK') {
+                  directionsDisplay.setDirections(response);
+
+                  // Update the total distance, estimated time, and fare in the popbox1 section
+                  var route = response.routes[0];
+                  var totalDistance = 0;
+                  var totalDuration = 0;
+                  for (var i = 0; i < route.legs.length; i++) {
+                    totalDistance += route.legs[i].distance.value;
+                    totalDuration += route.legs[i].duration.value;
+                  }
+                  var distanceInKm = (totalDistance / 1000).toFixed(1);
+                  var estimatedTime = (totalDuration / 60).toFixed(0);
+                  var fareEstimate = (totalDistance * 0.010).toFixed(2);
+
+                  document.getElementById('estimatedTime').textContent = estimatedTime + ' min';
+                  document.getElementById('totalDistance').textContent = distanceInKm + ' km';
+                  document.getElementById('fareEstimate').textContent = '₹' + fareEstimate;
+                } else {
+                  window.alert('Directions request failed due to ' + status);
+                }
+              });
+            } else {
+              window.alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        } else {
+          window.alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+
+    // Initialize the map on page load
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: { lat: 11.94152, lng: 79.80978 },
+        mapTypeControl: false,
+        fullscreenControl: false
+      });
+
+      var sourceInput = document.getElementById('source');
+      var destinationInput = document.getElementById('destination');
+      var autocompleteOptions = {
+        types: ['geocode'],
+        componentRestrictions: { country: 'your_country_code' },
+        fields: ['formatted_address', 'geometry']
+      };
+
+      var sourceAutocomplete = new google.maps.places.Autocomplete(sourceInput, autocompleteOptions);
+      sourceAutocomplete.setComponentRestrictions({ country: 'your_country_code' });
+      sourceAutocomplete.setFields(['formatted_address', 'geometry']);
+      sourceAutocomplete.setTypes(['geocode']);
+      sourceAutocomplete.setOptions({ strictBounds: true });
+      sourceAutocomplete.setComponentRestrictions({ country: 'your_country_code' });
+
+      var sourceMarker = new google.maps.Marker({ map: map });
+
+      sourceAutocomplete.addListener('place_changed', function () {
+        var place = sourceAutocomplete.getPlace();
+        if (place.geometry) {
+          map.panTo(place.geometry.location);
+          map.setZoom(13);
+          sourceMarker.setPosition(place.geometry.location);
+        }
+      });
+
+      // Display the autocomplete predictions for source input
+      sourceAutocomplete.addListener('keydown', function (event) {
+        if (event.key !== 'Enter') {
+          return;
+        }
+        event.preventDefault();
+        sourceAutocomplete.updateInput(sourceInput.value);
+        var sourcePlace = sourceAutocomplete.getPlace();
+        if (sourcePlace && sourcePlace.geometry) {
+          map.panTo(sourcePlace.geometry.location);
+          map.setZoom(13);
+          sourceMarker.setPosition(sourcePlace.geometry.location);
+        }
+      });
+    }
+    window.addEventListener('scroll', function () {
+      var popbox = document.querySelector('.popbox');
+      if (window.pageYOffset > 100) {
+        popbox.classList.add('show');
+        popbox.classList.remove('hide');
+      } else {
+        popbox.classList.remove('show');
+        popbox.classList.add('hide');
+      }
+    });
+
+    // Call the initMap function when the page loads
+    window.onload = initMap;
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqs5uPsagkNSZRj0iFrOvCdj-tiLJcf88&callback=initMap">
+    </script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
